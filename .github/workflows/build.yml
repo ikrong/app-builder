@@ -54,7 +54,6 @@ jobs:
         run: |
           cd app-source 
           npm install
-          npm rebuild --arch=${{ matrix.arch }}
           node build.mjs --arch=${{ matrix.arch }}
 
       - name: Upload Artifact (for debug)
