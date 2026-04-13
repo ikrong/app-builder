@@ -20,8 +20,8 @@ jobs:
         include:
           - os: macos-latest
             arch: x64
-          - os: macos-latest
-            arch: arm64
+          # - os: macos-latest
+          #   arch: arm64
 
           # - os: windows-latest
           #   arch: x64
@@ -56,15 +56,17 @@ jobs:
           npm install
           node build.mjs --arch=${{ matrix.arch }}
 
-      - name: Upload Artifact (for debug)
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-${{ matrix.os }}-${{ matrix.arch }}
-          path: app-source/${{github.event.inputs.destdir}}/*
-
-      # - name: Upload to Release
-      #   uses: softprops/action-gh-release@v2
+      # - name: Upload Artifact (for debug)
+      #   uses: actions/upload-artifact@v4
       #   with:
-      #     files: release/*.zip
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.MY_ACCESS_TOKEN_TO_GH }}
+      #     name: app-${{ matrix.os }}-${{ matrix.arch }}
+      #     path: app-source/${{github.event.inputs.destdir}}/*
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app-source/${{github.event.inputs.destdir}}/*
+          name: ${{ github.event.inputs.version }}
+          tag: ${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.MY_ACCESS_TOKEN_TO_GH }}
