@@ -13,6 +13,9 @@ on:
         description: "Artifact destination"
         required: true
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -68,5 +71,6 @@ jobs:
           files: app-source/${{github.event.inputs.destdir}}/*
           name: ${{ github.event.inputs.version }}
           tag_name: ${{ github.event.inputs.version }}
+          repository: 
         env:
           GITHUB_TOKEN: ${{ secrets.MY_ACCESS_TOKEN_TO_GH }}
