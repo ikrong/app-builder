@@ -33,7 +33,8 @@ jobs:
         with:
           repository: ${{ github.event.inputs.source }}
           ssh-key: ${{ secrets.SOURCE_SSK_KEY }}
-          ssh-known-hosts: code.aliyun.com
+          ssh-known-hosts: codeup.aliyun.com
+          github-server-url: https://codeup.aliyun.com
 
       - name: Setup Node
         uses: actions/setup-node@v4
