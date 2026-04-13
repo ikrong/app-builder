@@ -28,13 +28,17 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v6.0.2
-        with:
-          repository: ${{ github.event.inputs.source }}
-          ssh-key: ${{ secrets.SOURCE_SSK_KEY }}
-          ssh-known-hosts: codeup.aliyun.com
-          github-server-url: https://codeup.aliyun.com/ikrong/
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SOURCE_SSK_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan codeup.aliyun.com >> ~/.ssh/known_hosts
+
+      - name: Clone Codeup Repo
+        run: |
+          git clone ${{ github.event.inputs.source }} app-source
+          cd app-source
 
       - name: Setup Node
         uses: actions/setup-node@v4
