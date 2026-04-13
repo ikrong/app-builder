@@ -37,6 +37,7 @@ jobs:
 
     steps:
       - name: Setup SSH
+        shell: bash
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SOURCE_SSK_KEY }}" > ~/.ssh/id_ed25519
@@ -44,6 +45,7 @@ jobs:
           ssh-keyscan codeup.aliyun.com >> ~/.ssh/known_hosts
 
       - name: Clone Codeup Repo
+        shell: bash
         run: |
           git clone ${{ github.event.inputs.source }} app-source
           cd app-source
@@ -54,6 +56,7 @@ jobs:
           node-version: 22
 
       - name: Install dependencies
+        shell: bash
         run: |
           cd app-source 
           npm install
