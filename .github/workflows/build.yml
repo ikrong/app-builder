@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: app-${{ matrix.os }}-${{ matrix.arch }}
-          path: app-builder/release/*.zip
+          path: app-source/release/*.zip
 
       # - name: Upload to Release
       #   uses: softprops/action-gh-release@v2
