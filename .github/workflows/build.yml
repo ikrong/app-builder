@@ -9,6 +9,9 @@ on:
       source:
         description: "Source to build"
         required: true
+      destdir:
+        description: "Artifact destination"
+        required: true
 
 jobs:
   build:
@@ -54,21 +57,11 @@ jobs:
           npm rebuild --arch=${{ matrix.arch }}
           node build.mjs --arch=${{ matrix.arch }}
 
-      - name: Compress output
-        run: |
-          cd app-source
-          mkdir release
-          if [ "${{ runner.os }}" == "Windows" ]; then
-            powershell Compress-Archive -Path output/* -DestinationPath release/app-${{ matrix.os }}-${{ matrix.arch }}.zip
-          else
-            zip -r release/app-${{ matrix.os }}-${{ matrix.arch }}.zip output/*
-          fi
-
       - name: Upload Artifact (for debug)
         uses: actions/upload-artifact@v4
         with:
           name: app-${{ matrix.os }}-${{ matrix.arch }}
-          path: app-source/release/*.zip
+          path: app-source/${{github.event.inputs.destdir}}/*
 
       # - name: Upload to Release
       #   uses: softprops/action-gh-release@v2
