@@ -57,10 +57,7 @@ jobs:
 
       - name: Install dependencies
         shell: bash
-        run: |
-          cd app-source 
-          npm install
-          node build.mjs --arch=${{ matrix.arch }}
+        run:  cd app-source && npm install && node build.mjs --arch=${{ matrix.arch }}
 
       # - name: Upload Artifact (for debug)
       #   uses: actions/upload-artifact@v4
