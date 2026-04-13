@@ -1,0 +1,73 @@
+name: Build Electron App
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to build"
+        required: true
+      source:
+        description: "Source to build"
+        required: true
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: macos-latest
+            arch: x64
+          - os: macos-latest
+            arch: arm64
+
+          - os: windows-latest
+            arch: x64
+          - os: windows-latest
+            arch: ia32
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+        with:
+          repository: ${{ github.event.inputs.source }}
+          ssh-key: ${{ secrets.SOURCE_SSK_KEY }}
+          ssh-known-hosts: code.aliyun.com
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Rebuild native modules
+        run: npm rebuild --arch=${{ matrix.arch }}
+
+      - name: Build Electron App
+        run: |
+          node build.mjs --arch=${{ matrix.arch }}
+
+      - name: Compress output
+        run: |
+          mkdir release
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            powershell Compress-Archive -Path output/* -DestinationPath release/app-${{ matrix.os }}-${{ matrix.arch }}.zip
+          else
+            zip -r release/app-${{ matrix.os }}-${{ matrix.arch }}.zip output/*
+          fi
+
+      - name: Upload Artifact (for debug)
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-${{ matrix.os }}-${{ matrix.arch }}
+          path: release/*.zip
+
+      # - name: Upload to Release
+      #   uses: softprops/action-gh-release@v2
+      #   with:
+      #     files: release/*.zip
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.MY_ACCESS_TOKEN_TO_GH }}
