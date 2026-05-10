@@ -44,29 +44,34 @@ jobs:
           git clone ${{ github.event.inputs.source }} app-source
           cd app-source
 
-      - name: Build wails
-        uses: dAppServer/wails-build-action@v2.2
-        id: build
+      - uses: actions/setup-go@v6
+        working-directory: ./app-source
         with:
-          build-name: ${{ matrix.build.name }}
-          build-platform: ${{ matrix.build.platform }}
-          package: false
-          app-working-directory: app-source
-          go-version: '1.20'
+          go-version-file: 'go.mod'
 
-      - name: Before Upload
+      - name: Install Wails
+        run: go install github.com/wailsapp/wails/v2/cmd/wails
         shell: bash
-        run: |
-          cd app-source
-          if [ -f "post.sh" ]; then
-            ./post.sh
-          else
-            echo "No post.sh found"
-          fi
-          
+
+      - name: Install macOS Wails deps
+        if: runner.os == 'macOS'
+        run: brew install mitchellh/gon/gon
+        shell: bash
+
+      - name: Build App
+        shell: cmd
+        if: ${{ runner.os == 'Windows' }}
+        working-directory: ./app-source
+        run: build.bat
+
+      - name: Build App
+        shell: bash
+        if: ${{ runner.os == 'macOS' }}
+        working-directory: ./app-source
+        run: build.sh
 
       - name: Upload to Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: app-source/build/bin/*
           name: ${{ github.event.inputs.version }}
