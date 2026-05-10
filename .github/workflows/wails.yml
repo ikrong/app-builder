@@ -68,7 +68,7 @@ jobs:
         shell: bash
         if: ${{ runner.os == 'macOS' }}
         working-directory: ./app-source
-        run: build.sh
+        run: ./build.sh
 
       - name: Upload to Release
         uses: softprops/action-gh-release@v3
