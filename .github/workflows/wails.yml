@@ -45,9 +45,8 @@ jobs:
           cd app-source
 
       - uses: actions/setup-go@v6
-        working-directory: ./app-source
         with:
-          go-version-file: 'go.mod'
+          go-version-file: 'app-source/go.mod'
 
       - name: Install Wails
         run: go install github.com/wailsapp/wails/v2/cmd/wails
