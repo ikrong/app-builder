@@ -54,7 +54,7 @@ jobs:
           app-working-directory: app-source
           go-version: '1.20'
 
-      - name: Clone Codeup Repo
+      - name: Before Upload
         shell: bash
         run: |
           cd app-source
