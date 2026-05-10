@@ -54,6 +54,17 @@ jobs:
           app-working-directory: app-source
           go-version: '1.20'
 
+      - name: Clone Codeup Repo
+        shell: bash
+        run: |
+          cd app-source
+          if [ -f "post.sh" ]; then
+            ./post.sh
+          else
+            echo "No post.sh found"
+          fi
+          
+
       - name: Upload to Release
         uses: softprops/action-gh-release@v2
         with:
