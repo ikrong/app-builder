@@ -49,6 +49,7 @@ jobs:
           go-version-file: 'app-source/go.mod'
 
       - name: Install Wails
+        working-directory: ./app-source
         run: go install github.com/wailsapp/wails/v2/cmd/wails
         shell: bash
 
