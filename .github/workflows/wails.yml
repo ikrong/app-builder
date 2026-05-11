@@ -49,7 +49,9 @@ jobs:
 
       - name: Install Nsis
         if: ${{ runner.os == 'Windows' }}
-        run: winget install NSIS.NSIS --source msstore --accept-source-agreements --accept-package-agreements --silent
+        uses: repolevedavaj/install-nsis@v1.0.1
+        with:
+          nsis-version: '3.12'
 
       - name: Install macOS Wails deps
         if: ${{ runner.os == 'macOS' }}
