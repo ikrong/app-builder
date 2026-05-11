@@ -47,8 +47,12 @@ jobs:
         run: go install github.com/wailsapp/wails/v2/cmd/wails@latest
         shell: bash
 
+      - name: Install Nsis
+        if: ${{ runner.os == 'Windows' }}
+        run: winget install NSIS.NSIS --silent
+
       - name: Install macOS Wails deps
-        if: runner.os == 'macOS'
+        if: ${{ runner.os == 'macOS' }}
         run: brew install mitchellh/gon/gon
         shell: bash
 
