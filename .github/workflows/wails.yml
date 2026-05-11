@@ -49,9 +49,19 @@ jobs:
 
       - name: Install Nsis
         if: ${{ runner.os == 'Windows' }}
-        uses: repolevedavaj/install-nsis@v1.0.1
-        with:
-          nsis-version: '3.10'
+        run: |
+          Invoke-WebRequest -UserAgent "curl/8.20.0" "https://prdownloads.sourceforge.net/nsis/nsis-3.12-setup.exe?download" -OutFile C:\WINDOWS\Temp\nsis-setup.exe
+          $process = Start-Process "C:\WINDOWS\Temp\nsis-setup.exe" -ArgumentList "/S" -Wait -PassThru
+          $exitCode = $process.ExitCode
+            if ($exitCode -eq 0) {
+                Write-Host "Installer ran successfully."
+            } else {
+                Write-Host "Installer failed with exit code $exitCode."
+                exit $exitCode
+            }
+          echo "C:\Program Files (x86)\NSIS\Bin" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+          echo "C:\Program Files (x86)\NSIS" | Out-File -FilePath "$env:GITHUB_PATH" -Append
+        shell: pwsh
 
       - name: Install macOS Wails deps
         if: ${{ runner.os == 'macOS' }}
