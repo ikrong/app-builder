@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Nsis
         if: ${{ runner.os == 'Windows' }}
-        run: winget install NSIS.NSIS --silent
+        run: winget install NSIS.NSIS --source msstore --accept-source-agreements --accept-package-agreements --silent
 
       - name: Install macOS Wails deps
         if: ${{ runner.os == 'macOS' }}
